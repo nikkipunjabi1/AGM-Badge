@@ -65,6 +65,8 @@ export const COPY = {
     step1: 'Download your badge',
     step2: 'Copy the caption below',
     step3: 'Open LinkedIn, start a post, attach the image and paste the caption',
+    step4: "Don't forget to tag PMI UAE Chapter.",
+    step4Note: "Type the @ yourself and pick the Chapter from the list, or it won't link.",
   },
 
   disclaimer:
@@ -106,6 +108,13 @@ export const BADGE_TEXT = {
   url: 'pmiuae.org',
 } as const;
 
+/**
+ * Written with the @ already in place so the attendee only has to retype that one
+ * character for LinkedIn's picker to fire. Pasted text never becomes a real mention —
+ * see COPY.howto.step4.
+ */
+const CHAPTER_TAG = '@PMI UAE Chapter';
+
 const HASHTAGS = '#PMIUAE #PMIUAEChapter #AnnualGathering2026 #GrowingInUnity #ProjectManagement';
 
 /**
@@ -126,6 +135,7 @@ export function linkedInCaption(role?: string, company?: string): string {
     opener +
     `This year's theme is ${EVENT.theme}. It is a full day of keynotes, a panel on where AI and sustainability actually meet in delivery, and specialist tracks in the afternoon.\n\n` +
     `If you're going too, let's connect on the day. Registration is open to Chapter members here: ${EVENT_URL}\n\n` +
+    `Hosted by ${CHAPTER_TAG}.\n\n` +
     HASHTAGS
   );
 }

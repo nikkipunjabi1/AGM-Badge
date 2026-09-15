@@ -121,6 +121,10 @@ export default function ShareBar({ canvasRef, disabled, role, company, onEvent }
             Open LinkedIn
           </a>
         </li>
+        <li className="text-ink">
+          4. <span className="font-medium">{COPY.howto.step4}</span>{' '}
+          <span className="text-muted">{COPY.howto.step4Note}</span>
+        </li>
       </ol>
     </div>
   );

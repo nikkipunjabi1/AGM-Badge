@@ -71,6 +71,8 @@ campaign; check it before shipping any new string.
 | `howto.step1` | Download your badge |
 | `howto.step2` | Copy the caption below |
 | `howto.step3` | Open LinkedIn, start a post, attach the image and paste the caption |
+| `howto.step4` | Don't forget to tag PMI UAE Chapter. |
+| `howto.step4Note` | Type the @ yourself and pick the Chapter from the list, or it won't link. |
 | `disclaimer` | This is an attendee card to share on social media. It is not a certification, and it is not proof of registration or PDUs. |
 | `footer.privacy` | How we handle your details |
 | `footer.event` | View the event page |
@@ -102,6 +104,8 @@ This year's theme is Growing in Unity: Leading AI-Driven and Sustainable Project
 
 If you're going too, let's connect on the day. Registration is open to Chapter members here: {EVENT_URL}
 
+Hosted by @PMI UAE Chapter.
+
 #PMIUAE #PMIUAEChapter #AnnualGathering2026 #GrowingInUnity #ProjectManagement #AI #Sustainability
 ```
 
@@ -127,7 +131,18 @@ I'll be at the PMI UAE Chapter Annual Gathering 2026 — 10 October, Le Méridie
 Primary: `#PMIUAE` `#PMIUAEChapter` `#AnnualGathering2026` `#GrowingInUnity`
 Secondary: `#ProjectManagement` `#AI` `#Sustainability` `#Dubai` `#PMO`
 
-Keep to six or fewer on LinkedIn — beyond that, reach drops.
+Keep to six or fewer on LinkedIn; beyond that, reach drops.
+
+### 5.6 Tagging the Chapter
+
+The caption carries `@PMI UAE Chapter` with the `@` already written, so tagging costs the attendee
+one keystroke rather than typing the whole name. But **LinkedIn only creates a real mention when
+the `@` is typed and the Chapter is chosen from its dropdown.** Pasted text stays grey and links
+nowhere, which is why `howto.step4` is a plain reminder with the mechanics as a quiet note beneath
+it, rather than a lecture about how LinkedIn works.
+
+This is worth the extra step: a genuine tag puts the post in the Chapter page's mentions and
+notifies whoever runs it, which a hashtag alone does not do.
 
 ## 6. Confirmation email snippet
 
