@@ -211,6 +211,11 @@ so the number is an estimate and should be reported as one. `/api/stats` is gate
 query string, which is obscurity, not authentication; that is proportionate for anonymous totals
 and would not be for anything personal.
 
+**Excluding test runs.** `/api/stats` takes an optional `from=YYYY-MM-DD` and ignores earlier
+dates, so pre-launch testing stays out of the campaign figures. That is why there is no reset: a
+filter destroys nothing, keeps the numbers reproducible, and leaves no endpoint that could wipe
+the counts by accident or by someone guessing the key.
+
 **The boundary to hold.** If a future change wants to attach a name, an email, or any identifier to
 an event, that is not an extension of this decision. It is the decision this ADR rejected, and it
 needs the privacy notice rewritten first.

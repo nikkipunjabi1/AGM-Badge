@@ -80,6 +80,18 @@ directory — it only declares the functions directory:
    be sure the functions have picked it up).
 4. Open `https://pmiuae-agm2026.netlify.app/?stats=<key>`.
 
+### Excluding test runs
+
+Everything recorded before launch — including your own testing and the deploy smoke test — is in
+the totals by default. Add `&from=YYYY-MM-DD` to count only from a date onwards:
+
+```
+https://pmiuae-agm2026.netlify.app/?stats=<key>&from=2026-09-28
+```
+
+Use the launch date and the campaign figures are clean. This filters rather than deletes, so the
+numbers stay reproducible and there is no endpoint that can wipe the counts by accident.
+
 Keep that URL to yourself. The key sits in the query string, so it will end up in browser history
 and in any screenshot of the address bar. That is proportionate for anonymous totals and would not
 be for anything personal — do not reuse a password for it.
@@ -101,6 +113,7 @@ Run in order on the production URL, not a preview.
 - [ ] Lighthouse mobile: performance ≥ 90, accessibility 100
 - [ ] `/privacy` reachable and matches PRIVACY.md
 - [ ] `STATS_KEY` set in Netlify, and `/?stats=<key>` shows the numbers
+- [ ] `&from=<launch date>` excludes pre-launch test runs
 - [ ] `/api/stats` returns 404 without the key
 - [ ] Counting fires on badge creation, and carries no personal data
 - [ ] Brand sign-off received in writing (AGB-055)

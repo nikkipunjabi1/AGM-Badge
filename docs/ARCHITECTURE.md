@@ -191,6 +191,11 @@ session for free, and yields a per-day breakdown with no extra storage.
 `STATS_KEY` environment variable in Netlify. Attendees see nothing; a wrong key is
 indistinguishable from the feature being switched off.
 
+Add `&from=YYYY-MM-DD` to exclude anything recorded before that date, which is how pre-launch
+testing is kept out of the campaign figures. Filtering was chosen over a reset endpoint
+deliberately: nothing is destructive, the numbers stay reproducible, and there is no route that
+could wipe the counts by accident or by guessing.
+
 ## 10. Project layout
 
 ```

@@ -6,6 +6,8 @@ import type { BadgeEvent } from '@/lib/analytics';
 type Stats = {
   totals: Record<BadgeEvent, number>;
   byDay: Record<BadgeEvent, Record<string, number>>;
+  /** Counting from this date onwards, if the URL asked for one. */
+  from: string | null;
   generatedAt: string;
 };
 
@@ -25,6 +27,7 @@ const ROWS: { event: BadgeEvent; label: string; note?: string }[] = [
  */
 const subscribeNever = () => () => {};
 const readKey = () => new URLSearchParams(window.location.search).get('stats');
+const readFrom = () => new URLSearchParams(window.location.search).get('from');
 
 export default function StatsPanel() {
   const [stats, setStats] = useState<Stats>();
@@ -32,12 +35,16 @@ export default function StatsPanel() {
 
   // Read after hydration so the static page and the client agree on the first render.
   const key = useSyncExternalStore(subscribeNever, readKey, () => null);
+  const from = useSyncExternalStore(subscribeNever, readFrom, () => null);
 
   useEffect(() => {
     if (!key) return;
     let live = true;
 
-    fetch(`/api/stats?key=${encodeURIComponent(key)}`)
+    const query = new URLSearchParams({ key });
+    if (from) query.set('from', from);
+
+    fetch(`/api/stats?${query}`)
       .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
       .then((data: Stats) => live && setStats(data))
       .catch(() => live && setFailed(true));
@@ -45,7 +52,7 @@ export default function StatsPanel() {
     return () => {
       live = false;
     };
-  }, [key]);
+  }, [key, from]);
 
   if (!key) return null;
 
@@ -65,6 +72,9 @@ export default function StatsPanel() {
       <h2 className="font-display text-lg font-semibold">Campaign numbers</h2>
       <p className="mt-1 text-xs text-muted">
         Only visible with the stats key. Attendees never see this.
+        {stats?.from
+          ? ` Counting from ${stats.from} onwards.`
+          : ' Counting everything ever recorded, including test runs.'}
       </p>
 
       {failed && (

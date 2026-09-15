@@ -37,6 +37,12 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response('Not found', { status: 404 });
   }
 
+  // Optional ?from=YYYY-MM-DD, so testing before launch does not muddy the campaign
+  // numbers. Filtering beats a reset endpoint: nothing is destroyed, the figures stay
+  // reproducible, and there is no way to wipe the counts by accident or by guessing.
+  const fromParam = new URL(req.url).searchParams.get('from');
+  const from = fromParam && /^\d{4}-\d{2}-\d{2}$/.test(fromParam) ? fromParam : null;
+
   const store = getStore('badge-counts');
   const totals: Record<string, number> = {};
   const byDay: Record<string, Record<string, number>> = {};
@@ -50,6 +56,8 @@ const handler = async (req: Request): Promise<Response> => {
         // key is `<event>/<YYYY-MM-DD>/<session>`
         const day = blob.key.split('/')[1];
         if (!day) continue;
+        // Dates are ISO, so a string comparison is a date comparison.
+        if (from && day < from) continue;
         days[day] = (days[day] ?? 0) + 1;
         total += 1;
       }
@@ -60,7 +68,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   return new Response(
-    JSON.stringify({ totals, byDay, generatedAt: new Date().toISOString() }, null, 2),
+    JSON.stringify({ totals, byDay, from, generatedAt: new Date().toISOString() }, null, 2),
     {
       status: 200,
       headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
