@@ -201,7 +201,11 @@ Order on mobile — preview first, because seeing the badge is what motivates co
 1. Header: logo, "Annual Gathering 2026", countdown (US-11)
 2. Live badge preview, full-width, 1:1
 3. Name field (required, autofocus)
-4. Photo picker with "Your photo stays on your device" reassurance
+4. Photo picker with "Your photo stays on your device" reassurance, plus zoom and recentre
+   once a photo is attached. **Positioning is done by dragging on the badge itself**, not by
+   offset controls in the form — it is the first thing an attendee tries, and a pair of X/Y
+   sliders for something this direct is needless indirection. The cursor changes to a grab
+   handle, and arrow keys nudge the photo when the preview has focus.
 5. Role and company, marked *Optional*
 6. Primary **Download image** button, secondary **Share** (mobile only, shown when the browser
    supports sharing files), tertiary **Copy caption**

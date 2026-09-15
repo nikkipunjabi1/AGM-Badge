@@ -62,6 +62,7 @@ campaign; check it before shipping any new string.
 | `form.optional` | Optional |
 | `preview.label` | Your badge |
 | `preview.empty` | Enter your name to see your badge |
+| `preview.dragHint` | Drag your photo on the badge to move it. Zoom in first if it will not budge. |
 | `actions.download` | Download your badge |
 | `actions.share` | Share to an app |
 | `actions.copyCaption` | Copy caption |

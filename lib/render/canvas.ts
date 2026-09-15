@@ -13,13 +13,58 @@ import { BADGE_TEXT } from '../content';
 import { initials } from '../validation';
 import { drawTracked, familyFor, fitText, fitWrapped, LINE_HEIGHT } from './text';
 
+export type Crop = {
+  /** Horizontal pan as a fraction of the aperture diameter. 0 is centred. */
+  x: number;
+  /** Vertical pan as a fraction of the aperture diameter. 0 is centred. */
+  y: number;
+  zoom: number;
+};
+
+export const DEFAULT_CROP: Crop = { x: 0, y: 0, zoom: 1 };
+
 export type BadgeData = {
   name: string;
   role?: string;
   company?: string;
   photo?: ImageBitmap;
-  crop?: { x: number; y: number; zoom: number };
+  crop?: Crop;
 };
+
+/** Hides the anti-aliased seam where the image edge meets the circular mask. */
+const COVER_OVERSCAN = 1.02;
+
+type Dimensions = { width: number; height: number };
+
+/** Scale that makes the photo cover the circular aperture at the given zoom. */
+export function photoScale(photo: Dimensions, d: number, zoom: number): number {
+  return (d / Math.min(photo.width, photo.height)) * zoom * COVER_OVERSCAN;
+}
+
+/**
+ * How far the photo can pan before a gap would appear at the edge of the aperture,
+ * as a fraction of the diameter. Zero on an axis means the photo only just covers it —
+ * zooming in is what creates room to move.
+ */
+export function panLimits(photo: Dimensions, d: number, zoom: number): { x: number; y: number } {
+  const scale = photoScale(photo, d, zoom);
+  return {
+    x: Math.max(0, (photo.width * scale - d) / 2 / d),
+    y: Math.max(0, (photo.height * scale - d) / 2 / d),
+  };
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+/** Keep a crop inside its pan limits, so the aperture is always fully covered. */
+export function clampCrop(photo: Dimensions, d: number, crop: Crop): Crop {
+  const limit = panLimits(photo, d, crop.zoom);
+  return {
+    zoom: crop.zoom,
+    x: clamp(crop.x, -limit.x, limit.x),
+    y: clamp(crop.y, -limit.y, limit.y),
+  };
+}
 
 /**
  * The event key visual, drawn programmatically.
@@ -139,15 +184,13 @@ function drawPortrait(
 
   if (data.photo) {
     const { photo } = data;
-    const zoom = data.crop?.zoom ?? 1;
-    // Cover-fit the aperture, then apply the attendee's pan. The 2% overscan hides the
-    // anti-aliased seam where the image edge would otherwise land exactly on the mask.
-    const scale = (d / Math.min(photo.width, photo.height)) * zoom * 1.02;
+    // Clamp on the way in as well as in the UI: the renderer must never leave a gap at
+    // the edge of the aperture, whatever crop it is handed.
+    const crop = clampCrop(photo, d, data.crop ?? DEFAULT_CROP);
+    const scale = photoScale(photo, d, crop.zoom);
     const w = photo.width * scale;
     const h = photo.height * scale;
-    const panX = (data.crop?.x ?? 0) * d;
-    const panY = (data.crop?.y ?? 0) * d;
-    ctx.drawImage(photo, cx - w / 2 + panX, cy - h / 2 + panY, w, h);
+    ctx.drawImage(photo, cx - w / 2 + crop.x * d, cy - h / 2 + crop.y * d, w, h);
   } else {
     ctx.fillStyle = COLOR.mint;
     ctx.fillRect(cx - r, cy - r, d, d);

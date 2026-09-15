@@ -17,8 +17,8 @@ browser rather than inferred from the code:
   `badge-spec.ts`
 - AGB-010 – AGB-014: canvas renderer, text auto-fit, Arabic shaping and RTL, monogram fallback,
   sparse-layout rebalancing
-- AGB-020 – AGB-022, AGB-024: Zod schema and blocklist, live form, photo decode/orient/downscale/
-  crop, HEIC failure path
+- AGB-020 – AGB-024: Zod schema and blocklist, live form, photo decode/orient/downscale/crop,
+  drag-to-reposition with zoom and recentre, HEIC failure path
 - AGB-034 – AGB-037: download (primary), native share on mobile only, copy caption, composer links,
   event facts and Register link
 - AGB-043: privacy page
@@ -35,7 +35,6 @@ form reachable; no console errors.
   Caught by a unit test, fixed in the renderer.
 
 **Still open**
-- AGB-023 photo pan (zoom works; drag-to-reposition not built)
 - AGB-042 analytics is a no-op pending OQ-9
 - AGB-056 story format: spec'd in `badge-spec.ts` as `STORY`, not yet wired to the UI
 - The app share card (`public/art/share-card.png`) is blocked on OQ-4
@@ -104,7 +103,7 @@ absorbed quietly.
 | AGB-020 | Zod schema + blocklist; inline field errors | 3 | Accept/reject table in tests passes fully | US-08 |
 | AGB-021 | Form UI with live preview, debounced redraw | 3 | Preview updates within 150 ms of typing | US-01 |
 | AGB-022 | Photo picker: decode, EXIF orient, downscale, circular crop | 5 | Portrait iPhone photo lands upright and centred | US-03 |
-| AGB-023 | Photo pan/zoom adjust + remove | 3 | Crop adjustable by drag and slider; remove restores monogram | US-03 |
+| AGB-023 | Photo reposition: drag on the badge, zoom slider, recentre, remove | 3 | Crop adjustable by drag, keyboard and slider; pan clamped so the aperture is always covered; remove restores monogram | US-03 |
 | AGB-024 | HEIC failure path with the specific error message | 2 | Chrome + HEIC shows `errors.photoFormat`, never hangs | US-03 |
 
 ### Share and download
@@ -180,6 +179,6 @@ Not in v1. Listed so good ideas are captured rather than absorbed.
 
 Points are relative, roughly one point ≈ half a day for one developer. Sprint 1 at 62 points is
 full for a single developer across five days and assumes no significant rework in the canvas
-renderer. If AGB-010/011 slip past Friday 19 September, drop AGB-056 and AGB-023 before
+renderer. If AGB-010/011 slip past Friday 19 September, drop AGB-056 before
 touching the launch date — the crop adjuster is the most droppable feature that still leaves the
 photo working.

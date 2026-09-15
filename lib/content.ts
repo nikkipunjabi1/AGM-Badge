@@ -38,7 +38,10 @@ export const COPY = {
       change: 'Change photo',
       remove: 'Remove',
       privacy: 'Your photo stays on your device. It is never uploaded to us.',
-      adjust: 'Drag to reposition, or use the slider to zoom',
+      zoom: 'Zoom',
+      recentre: 'Recentre',
+      adjust: 'Drag the photo on your badge to position it.',
+      adjustLocked: 'Zoom in to be able to move the photo around.',
     },
     role: { label: 'Your role', placeholder: 'e.g. PMO Lead' },
     company: { label: 'Your company', placeholder: 'e.g. Emirates Group' },
@@ -47,6 +50,7 @@ export const COPY = {
   preview: {
     label: 'Your badge',
     empty: 'Enter your name to see your badge',
+    dragHint: 'Drag your photo on the badge to move it. Zoom in first if it will not budge.',
   },
 
   actions: {

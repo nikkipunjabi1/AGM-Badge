@@ -7,6 +7,7 @@ import ShareBar from './ShareBar';
 import { COPY } from '@/lib/content';
 import { track, type BadgeEvent } from '@/lib/analytics';
 import { badgeSchema, validateField, type BadgeFields } from '@/lib/validation';
+import { DEFAULT_CROP, type Crop } from '@/lib/render/canvas';
 
 type Field = keyof BadgeFields;
 
@@ -61,7 +62,7 @@ export default function BadgeCreator() {
   const [fields, setFields] = useState({ name: '', role: '', company: '' });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [photo, setPhoto] = useState<ImageBitmap>();
-  const [zoom, setZoom] = useState(1);
+  const [crop, setCrop] = useState<Crop>(DEFAULT_CROP);
 
   const valid = badgeSchema.safeParse(fields).success;
 
@@ -84,9 +85,9 @@ export default function BadgeCreator() {
       role: fields.role.trim() || undefined,
       company: fields.company.trim() || undefined,
       photo,
-      crop: { x: 0, y: 0, zoom },
+      crop,
     }),
-    [fields, photo, zoom],
+    [fields, photo, crop],
   );
 
   return (
@@ -96,7 +97,7 @@ export default function BadgeCreator() {
         <h2 className="mb-3 font-display text-sm font-semibold tracking-wide text-muted uppercase">
           {COPY.preview.label}
         </h2>
-        <BadgeCanvas data={data} canvasRef={canvasRef} />
+        <BadgeCanvas data={data} canvasRef={canvasRef} onCropChange={setCrop} />
       </div>
 
       <div className="lg:order-1">
@@ -111,12 +112,12 @@ export default function BadgeCreator() {
 
           <PhotoPicker
             photo={photo}
-            zoom={zoom}
+            crop={crop}
             onPhoto={(next) => {
               setPhoto(next);
               if (next) track('photo_added');
             }}
-            onZoom={setZoom}
+            onCrop={setCrop}
           />
 
           <TextField

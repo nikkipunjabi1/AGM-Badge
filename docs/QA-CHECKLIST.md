@@ -24,7 +24,14 @@ shaping) are precisely the ones automated tests do not catch.
 - [ ] A landscape photo is centre-cropped without distortion
 - [ ] A HEIC photo works in Safari, and in Chrome shows `errors.photoFormat` rather than hanging
 - [ ] A file over 10 MB shows `errors.photoSize`
-- [ ] Pan and zoom adjust the crop; the change is reflected in the exported PNG
+- [ ] Dragging the photo on the badge moves it, and the cursor shows a grab handle
+- [ ] Dragging stops at the edge of the photo — no gap ever appears inside the circle
+- [ ] Zooming out after panning re-clamps the position rather than leaving a gap
+- [ ] Recentre appears once the photo has been moved, and restores the default framing
+- [ ] Arrow keys nudge the photo when the preview has focus
+- [ ] On a square photo at zoom 1 the copy explains that zooming is needed before it will move
+- [ ] Dragging the photo on a phone does not scroll the page
+- [ ] The adjusted crop is reflected in the exported image
 - [ ] Remove restores the monogram, and the monogram shows correct initials
 - [ ] A single-word name produces a one-letter monogram, not a crash
 - [ ] The "stays on your device" reassurance is visible before the file picker is opened
