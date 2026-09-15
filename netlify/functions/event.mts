@@ -51,9 +51,11 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const store = getStore('badge-counts');
     await store.set(`${event}/${day}/${session}`, '');
-  } catch {
-    // Counting is never allowed to break badge creation. Fail quietly.
-    return new Response(null, { status: 204 });
+  } catch (cause) {
+    // Report the failure rather than hiding it: a silently swallowed write would show up
+    // as counts that are simply always zero, with nothing to debug. Badge creation is
+    // unaffected either way — the client fires this and ignores the response entirely.
+    return new Response(String(cause), { status: 500 });
   }
 
   return new Response(null, { status: 204 });

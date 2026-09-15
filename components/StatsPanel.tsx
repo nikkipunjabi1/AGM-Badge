@@ -31,7 +31,7 @@ const readFrom = () => new URLSearchParams(window.location.search).get('from');
 
 export default function StatsPanel() {
   const [stats, setStats] = useState<Stats>();
-  const [failed, setFailed] = useState(false);
+  const [failure, setFailure] = useState<{ status: number; detail?: string }>();
 
   // Read after hydration so the static page and the client agree on the first render.
   const key = useSyncExternalStore(subscribeNever, readKey, () => null);
@@ -45,9 +45,15 @@ export default function StatsPanel() {
     if (from) query.set('from', from);
 
     fetch(`/api/stats?${query}`)
-      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
-      .then((data: Stats) => live && setStats(data))
-      .catch(() => live && setFailed(true));
+      .then(async (response) => {
+        if (response.ok) return (await response.json()) as Stats;
+        const body = await response.json().catch(() => null);
+        throw { status: response.status, detail: (body as { detail?: string })?.detail };
+      })
+      .then((data) => live && setStats(data))
+      .catch((cause: { status?: number; detail?: string }) => {
+        if (live) setFailure({ status: cause?.status ?? 0, detail: cause?.detail });
+      });
 
     return () => {
       live = false;
@@ -77,13 +83,35 @@ export default function StatsPanel() {
           : ' Counting everything ever recorded, including test runs.'}
       </p>
 
-      {failed && (
-        <p className="mt-4 text-sm text-danger">
-          Could not load the numbers. Check the key, and that STATS_KEY is set in Netlify.
-        </p>
+      {failure && (
+        <div className="mt-4 text-sm text-danger">
+          {failure.status === 404 ? (
+            <>
+              <p className="font-medium">That key was not accepted.</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 font-normal">
+                <li>
+                  Check <code>STATS_KEY</code> in Netlify matches the key in this URL exactly.
+                </li>
+                <li>
+                  <strong>Redeploy after setting it.</strong> Netlify does not push a new
+                  environment variable into functions that are already deployed.
+                </li>
+              </ul>
+            </>
+          ) : (
+            <>
+              <p className="font-medium">
+                Could not read the counts{failure.status ? ` (HTTP ${failure.status})` : ''}.
+              </p>
+              {failure.detail && (
+                <p className="mt-1 font-mono text-xs break-words">{failure.detail}</p>
+              )}
+            </>
+          )}
+        </div>
       )}
 
-      {!stats && !failed && <p className="mt-4 text-sm text-muted">Loading…</p>}
+      {!stats && !failure && <p className="mt-4 text-sm text-muted">Loading…</p>}
 
       {stats && (
         <>

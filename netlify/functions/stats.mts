@@ -28,9 +28,32 @@ function matches(a: string, b: string): boolean {
   return diff === 0;
 }
 
+const json = (body: unknown, status: number) =>
+  new Response(JSON.stringify(body, null, 2), {
+    status,
+    headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
+  });
+
 const handler = async (req: Request): Promise<Response> => {
-  const expected = process.env.STATS_KEY;
-  const supplied = new URL(req.url).searchParams.get('key');
+  const params = new URL(req.url).searchParams;
+
+  // Trimmed on both sides: a key copied from a terminal very often arrives with a
+  // trailing newline, and an invisible character is a miserable thing to debug.
+  const expected = process.env.STATS_KEY?.trim();
+  const supplied = params.get('key')?.trim();
+
+  /**
+   * Unauthenticated health check, so it is possible to tell "the key is wrong" from
+   * "the environment variable never reached the function" — which are the same 404 to
+   * anyone probing, and were previously indistinguishable when debugging too.
+   *
+   * It reveals only that a stats feature exists and whether a key is configured. Never
+   * the key, and never a single count. That is a fair trade for anonymous totals; it
+   * would not be for anything personal.
+   */
+  if (params.get('health')) {
+    return json({ ok: true, keyConfigured: Boolean(expected) }, 200);
+  }
 
   // Behave identically whether the key is absent, wrong, or unconfigured.
   if (!expected || !supplied || !matches(supplied, expected)) {
@@ -43,37 +66,37 @@ const handler = async (req: Request): Promise<Response> => {
   const fromParam = new URL(req.url).searchParams.get('from');
   const from = fromParam && /^\d{4}-\d{2}-\d{2}$/.test(fromParam) ? fromParam : null;
 
-  const store = getStore('badge-counts');
   const totals: Record<string, number> = {};
   const byDay: Record<string, Record<string, number>> = {};
 
-  for (const event of EVENTS) {
-    let total = 0;
-    const days: Record<string, number> = {};
+  try {
+    const store = getStore('badge-counts');
 
-    for await (const page of store.list({ prefix: `${event}/`, paginate: true })) {
-      for (const blob of page.blobs) {
-        // key is `<event>/<YYYY-MM-DD>/<session>`
-        const day = blob.key.split('/')[1];
-        if (!day) continue;
-        // Dates are ISO, so a string comparison is a date comparison.
-        if (from && day < from) continue;
-        days[day] = (days[day] ?? 0) + 1;
-        total += 1;
+    for (const event of EVENTS) {
+      let total = 0;
+      const days: Record<string, number> = {};
+
+      for await (const page of store.list({ prefix: `${event}/`, paginate: true })) {
+        for (const blob of page.blobs) {
+          // key is `<event>/<YYYY-MM-DD>/<session>`
+          const day = blob.key.split('/')[1];
+          if (!day) continue;
+          // Dates are ISO, so a string comparison is a date comparison.
+          if (from && day < from) continue;
+          days[day] = (days[day] ?? 0) + 1;
+          total += 1;
+        }
       }
-    }
 
-    totals[event] = total;
-    byDay[event] = days;
+      totals[event] = total;
+      byDay[event] = days;
+    }
+  } catch (cause) {
+    // The caller holds the key, so a real reason is more use to them than a blank 500.
+    return json({ error: 'Could not read the counts', detail: String(cause) }, 500);
   }
 
-  return new Response(
-    JSON.stringify({ totals, byDay, from, generatedAt: new Date().toISOString() }, null, 2),
-    {
-      status: 200,
-      headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
-    },
-  );
+  return json({ totals, byDay, from, generatedAt: new Date().toISOString() }, 200);
 };
 
 export default handler;
