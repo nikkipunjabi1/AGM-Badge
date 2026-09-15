@@ -103,6 +103,7 @@ export const BADGE_TEXT = {
   eventName: EVENT.name,
   eventDetail: `${EVENT.dateShort} · ${EVENT.venue}`,
   theme: EVENT.theme,
+  url: 'pmiuae.org',
 } as const;
 
 const HASHTAGS = '#PMIUAE #PMIUAEChapter #AnnualGathering2026 #GrowingInUnity #ProjectManagement';

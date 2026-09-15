@@ -34,6 +34,7 @@ event artwork and must be confirmed against the source file before launch (see D
 | `glow` | `#A7F3C6` | Thin highlight lines echoing the key visual |
 | `ink` | `#FFFFFF` | Primary text on the badge |
 | `inkMuted` | `rgba(255,255,255,0.82)` | Role line, secondary text |
+| `subtle` | `rgba(255,255,255,0.58)` | Utility text such as the chapter URL |
 | `scrim` | `rgba(4,20,13,0.72)` | Gradient over artwork so text stays legible |
 
 **Contrast.** All badge text must clear 4.5:1 against its actual backdrop *after* the scrim is
@@ -80,23 +81,24 @@ The primary artefact. Used for the LinkedIn feed, the download, and the native s
 
 ```
 ┌────────────────────────────────────────────────┐  0
-│  [PMI UAE Chapter logo]        ( 10 OCT 2026 ) │  header band, 0–260
+│  [PMI UAE Chapter logo]        ( 10 OCT 2026 ) │  header band, 0–240
 │                                                │
 │                    ╭──────╮                    │
-│                    │ photo│                    │  photo zone, 260–620
+│                    │ photo│                    │  photo, centre y 415
 │                    ╰──────╯                    │
 │                                                │
-│               I'M  ATTENDING                   │  eyebrow, 640–700
+│               I'M  ATTENDING                   │  eyebrow, baseline 651
 │                                                │
-│              Aysha Al Maktoum                  │  name, 700–800
-│                 PMO Lead                       │  role, 800–850
-│              Emirates Group                    │  company, 850–900
+│              Aysha Al Maktoum                  │  name, baseline 747
+│                 PMO Lead                       │  role, baseline 805
+│              Emirates Group                    │  company, baseline 855
 │                                                │
-│  ────────────────────────────────────────────  │  rule, y=914
-│      PMI UAE Chapter Annual Gathering 2026     │  event, 940–984
-│   10 October 2026  ·  Le Méridien Dubai        │  detail, 990–1026
+│  ────────────────────────────────────────────  │  rule, y=895
+│      PMI UAE Chapter Annual Gathering 2026     │  event, baseline 951
+│   10 October 2026  ·  Le Méridien Dubai        │  detail, baseline 995
 │   Growing in Unity: Leading AI-Driven and      │  theme, wraps,
-│      Sustainable Projects for Tomorrow         │  last baseline 1108
+│      Sustainable Projects for Tomorrow         │  last baseline 1074
+│                  pmiuae.org                    │  url, baseline 1112
 └────────────────────────────────────────────────┘  1200
 ```
 
@@ -106,16 +108,17 @@ The primary artefact. Used for the LinkedIn feed, the download, and the native s
 | Background | full bleed | Event key visual, WebP | Plus `scrim` vertical gradient, transparent at 0.35 → `scrim` at 1.0 |
 | Logo | x 80, y 72, height 68 (→ 189 px wide, clears the 180 px minimum) | `pmi_uae_chapter_horizontal_logo_inverted_rgb.svg` | White/inverted version. Never recolour |
 | Date pill | right-aligned to x 1120, y 76, h 56 | Poppins 600, 26 px, `ink` on `rgba(255,255,255,0.14)`, radius 28 | Content: `10 OCT 2026` |
-| Photo circle | centre (600, 440), Ø 300 | — | 4 px `mint` ring, 12 px outer glow at 30% |
+| Photo circle | centre (600, 415), Ø 300 | — | 4 px `mint` ring, 12 px outer glow at 30% |
 | Monogram fallback | same circle | Poppins 700, 120 px, `deepGreen` on `mint` | Up to 2 initials from the name |
-| Eyebrow | centre, baseline y 676 | Poppins 600, 30 px, letter-spacing 0.18em, `mint` | `I'M ATTENDING` |
-| **Name** | centre, baseline y 772 | Poppins 700, **72 px** | Auto-fit: see §6 |
-| Role | centre, baseline y 830 | Inter 500, 34 px, `inkMuted` | Omitted if blank |
-| Company | centre, baseline y 880 | Inter 400, 34 px, `mint` | Omitted if blank |
-| Rule | x 200→1000, y 914, 2 px | `rgba(255,255,255,0.22)` | — |
-| Event name | centre, baseline y 970 | Poppins 600, 40 px, `ink` | — |
-| Event detail | centre, baseline y 1014 | Inter 400, 30 px, `inkMuted` | `10 October 2026 · Le Méridien Dubai` |
-| **Theme** | centre, **last** baseline y 1108 | Inter 500, 30→21 px, `mint`, max 2 lines, width 720 | The full theme. Wraps, and is anchored from its last baseline upward so the bottom safe area holds at one line or two |
+| Eyebrow | centre, baseline y 651 | Poppins 600, 30 px, letter-spacing 0.18em, `mint` | `I'M ATTENDING` |
+| **Name** | centre, baseline y 747 | Poppins 700, **72 px** | Auto-fit: see §6 |
+| Role | centre, baseline y 805 | Inter 500, 34 px, `inkMuted` | Omitted if blank |
+| Company | centre, baseline y 855 | Inter 400, 34 px, `mint` | Omitted if blank |
+| Rule | x 200→1000, y 895, 2 px | `rgba(255,255,255,0.22)` | — |
+| Event name | centre, baseline y 951 | Poppins 600, 40 px, `ink` | — |
+| Event detail | centre, baseline y 995 | Inter 400, 30 px, `inkMuted` | `10 October 2026 · Le Méridien Dubai` |
+| **Theme** | centre, **last** baseline y 1074 | Inter 500, 26→20 px, `mint`, max 2 lines, width 640 | The full theme. Wraps, and is anchored from its last baseline upward so the bottom safe area holds at one line or two |
+| Chapter URL | centre, baseline y 1112 | Inter 400, 20 px, `subtle` | `pmiuae.org`. Quiet by design — a utility mark, never competing with the name |
 
 **Vertical rebalancing.** When role *and* company are both blank, shift the name block down by
 40 px and the photo down by 20 px so the composition stays centred (US-02). Do not leave the gap.
@@ -161,7 +164,7 @@ renderers:
 | Name | 72 px | 40 px | 1000 px | 2 | `fitText` |
 | Role | 34 px | 26 px | 900 px | 1 | `fitText` |
 | Company | 34 px | 26 px | 900 px | 1 | `fitText` |
-| Theme | 30 px | 21 px | 720 px | 2 | `fitWrapped` |
+| Theme | 26 px | 20 px | 640 px | 2 | `fitWrapped` |
 
 **Two fitters, because the two cases want opposite behaviour.** `fitText` prefers shrinking over
 wrapping, which is right for a name. The event theme is 72 characters, so the same rule would

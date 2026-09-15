@@ -84,6 +84,7 @@ campaign; check it before shipping any new string.
 | Event line | `PMI UAE Chapter Annual Gathering 2026` |
 | Detail line | `10 October 2026 · Le Méridien Dubai` |
 | Theme line | `Growing in Unity: Leading AI-Driven and Sustainable Projects for Tomorrow` (wraps to two lines) |
+| Chapter URL | `pmiuae.org` |
 | Track chip | `AI` or `SUSTAINABILITY` |
 
 Nothing else appears on the badge. In particular: no PDU count, no "verified", no QR code.

@@ -287,4 +287,8 @@ export function renderBadge(
     const fromBottom = (theme.lines.length - 1 - i) * themeLeading;
     ctx.fillText(line, centre, f.theme.bottom - fromBottom);
   });
+
+  ctx.fillStyle = COLOR.subtle;
+  ctx.font = `400 ${f.url.size}px "${FONT.body}"`;
+  ctx.fillText(BADGE_TEXT.url, centre, f.url.y);
 }

@@ -26,6 +26,8 @@ export const COLOR = {
   ink: '#FFFFFF',
   inkMuted: 'rgba(255,255,255,0.82)',
   scrim: 'rgba(4,20,13,0.72)',
+  /** Utility text such as the chapter URL: present, but never competing with the name. */
+  subtle: 'rgba(255,255,255,0.58)',
 } as const;
 
 export const FONT = {
@@ -62,6 +64,8 @@ export type BadgeFormat = {
   /** The full event theme. Wraps, and is anchored from its LAST baseline so it always
    *  respects the bottom safe area whether it takes one line or two. */
   theme: TextFit & { bottom: number };
+  /** Chapter URL, sitting quietly at the foot of the badge. */
+  url: { y: number; size: number };
   /** Applied when role and company are both empty, to keep the composition centred. */
   rebalance: { photo: number; block: number };
 };
@@ -73,16 +77,19 @@ export const SQUARE: BadgeFormat = {
   logoH: 68,
   logo: { x: 80, y: 72 },
   datePill: { right: 1120, y: 76, h: 56, size: 26, padX: 28 },
-  photo: { cx: 600, cy: 440, d: 300, ring: 4 },
+  photo: { cx: 600, cy: 415, d: 300, ring: 4 },
   monogramSize: 120,
-  eyebrow: { y: 676, size: 30, tracking: 0.18 },
-  name: { y: 772, max: 72, min: 40, width: 1000, maxLines: 2 },
-  role: { y: 830, max: 34, min: 26, width: 900, maxLines: 1 },
-  company: { y: 880, max: 34, min: 26, width: 900, maxLines: 1 },
-  rule: { x1: 200, x2: 1000, y: 914, h: 2 },
-  eventName: { y: 970, size: 40 },
-  eventDetail: { y: 1014, size: 30 },
-  theme: { bottom: 1108, max: 30, min: 21, width: 720, maxLines: 2 },
+  eyebrow: { y: 651, size: 30, tracking: 0.18 },
+  name: { y: 747, max: 72, min: 40, width: 1000, maxLines: 2 },
+  role: { y: 805, max: 34, min: 26, width: 900, maxLines: 1 },
+  company: { y: 855, max: 34, min: 26, width: 900, maxLines: 1 },
+  rule: { x1: 200, x2: 1000, y: 895, h: 2 },
+  eventName: { y: 951, size: 40 },
+  eventDetail: { y: 995, size: 30 },
+  // Narrower than the name's measure on purpose: it forces the theme to break after
+  // "and" into two balanced lines, rather than filling line one and orphaning the rest.
+  theme: { bottom: 1074, max: 26, min: 20, width: 640, maxLines: 2 },
+  url: { y: 1112, size: 20 },
   rebalance: { photo: 20, block: 40 },
 };
 
@@ -103,7 +110,8 @@ export const STORY: BadgeFormat = {
   rule: { x1: 200, x2: 880, y: 1490, h: 2 },
   eventName: { y: 1556, size: 48 },
   eventDetail: { y: 1612, size: 36 },
-  theme: { bottom: 1740, max: 36, min: 26, width: 800, maxLines: 3 },
+  theme: { bottom: 1726, max: 36, min: 26, width: 800, maxLines: 3 },
+  url: { y: 1790, size: 26 },
   rebalance: { photo: 24, block: 48 },
 };
 
