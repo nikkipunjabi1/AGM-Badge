@@ -16,6 +16,8 @@ export const EVENT = {
   dateLong: 'Saturday, 10 October 2026',
   dateShort: '10 October 2026',
   dateBadge: '10 OCT 2026',
+  /** For the share caption, where the event name already carries the year. */
+  dateCaption: 'Saturday 10 October',
   time: '08:00 – 17:00',
 
   venue: 'Le Méridien Dubai',

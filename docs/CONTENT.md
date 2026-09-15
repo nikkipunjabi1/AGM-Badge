@@ -95,7 +95,9 @@ Nothing else appears on the badge. In particular: no PDU count, no "verified", n
 
 The caption is pre-filled but fully editable — people post better copy when it sounds like them.
 
-### 5.1 LinkedIn — default
+### 5.1 LinkedIn
+
+One caption for everyone. See §5.2 for why there is no personalised variant.
 
 ```
 I'll be at the PMI UAE Chapter Annual Gathering 2026 on Saturday 10 October at Le Méridien Dubai.
@@ -104,15 +106,18 @@ This year's theme is Growing in Unity: Leading AI-Driven and Sustainable Project
 
 If you're going too, let's connect on the day. Registration is open to Chapter members here: {EVENT_URL}
 
-Hosted by @PMI UAE Chapter.
+See you there, @PMI UAE Chapter.
 
 #PMIUAE #PMIUAEChapter #AnnualGathering2026 #GrowingInUnity #ProjectManagement #AI #Sustainability
 ```
 
-### 5.2 LinkedIn — with role and company
+### 5.2 Why the caption is not personalised
 
-Same, with an opening line: `As {role} at {company}, I'm looking forward to a day on how AI and
-sustainability are reshaping how we deliver projects.`
+An earlier version wove the attendee's role and company into a sentence about what they were
+looking forward to. It was cut: of every line in the caption, it was the one most likely to read as
+words put in someone's mouth, and a caption that does not quite sound like you is a caption you
+rewrite or do not post. The same generic copy for everyone is the safer default, and anyone who
+wants it personal can type it themselves.
 
 ### 5.3 WhatsApp / short
 
@@ -135,8 +140,13 @@ Keep to six or fewer on LinkedIn; beyond that, reach drops.
 
 ### 5.6 Tagging the Chapter
 
-The caption carries `@PMI UAE Chapter` with the `@` already written, so tagging costs the attendee
-one keystroke rather than typing the whole name. But **LinkedIn only creates a real mention when
+The caption closes on `See you there, @PMI UAE Chapter.`, with the `@` already written so tagging
+costs the attendee one keystroke rather than typing the whole name.
+
+It stays deliberately plain. A line playing on the event theme was drafted and dropped: the caption
+already quotes the theme in full two paragraphs earlier, so echoing it at the close only repeats
+itself. "Hosted by" was dropped too, for reading like a footer credit rather than something a
+person attending would actually write. But **LinkedIn only creates a real mention when
 the `@` is typed and the Chapter is chosen from its dropdown.** Pasted text stays grey and links
 nowhere, which is why `howto.step4` is a plain reminder with the mechanics as a quiet note beneath
 it, rather than a lecture about how LinkedIn works.

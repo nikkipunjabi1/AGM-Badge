@@ -138,8 +138,6 @@ export default function BadgeCreator() {
           <ShareBar
             canvasRef={canvasRef}
             disabled={!valid}
-            role={fields.role.trim() || undefined}
-            company={fields.company.trim() || undefined}
             onEvent={(name) => track(name as BadgeEvent)}
           />
         </div>

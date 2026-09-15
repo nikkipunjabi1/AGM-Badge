@@ -122,20 +122,19 @@ const HASHTAGS = '#PMIUAE #PMIUAEChapter #AnnualGathering2026 #GrowingInUnity #P
  * better copy when it sounds like them. Carries the event link, which since ADR-008 is
  * the only route from a shared badge back to registration.
  *
+ * Deliberately generic: an earlier version wove the attendee's role and company into a
+ * sentence about what they were looking forward to, which was the one line most likely
+ * to read as words put in their mouth. The same copy for everyone is the safer default,
+ * and anyone who wants it personal can simply type it.
+ *
  * No em dashes anywhere in share copy: it is a house style rule for this campaign.
  */
-export function linkedInCaption(role?: string, company?: string): string {
-  const opener =
-    role && company
-      ? `As ${role} at ${company}, I'm looking forward to a day on how AI and sustainability are reshaping how we deliver projects.\n\n`
-      : '';
-
+export function linkedInCaption(): string {
   return (
-    `I'll be at the ${EVENT.name} on ${EVENT.dateLong.replace('Saturday, ', 'Saturday ')} at ${EVENT.venue}.\n\n` +
-    opener +
+    `I'm attending the ${EVENT.name} on ${EVENT.dateCaption} at ${EVENT.venue}.\n\n` +
     `This year's theme is ${EVENT.theme}. It is a full day of keynotes, a panel on where AI and sustainability actually meet in delivery, and specialist tracks in the afternoon.\n\n` +
     `If you're going too, let's connect on the day. Registration is open to Chapter members here: ${EVENT_URL}\n\n` +
-    `Hosted by ${CHAPTER_TAG}.\n\n` +
+    `See you there, ${CHAPTER_TAG}.\n\n` +
     HASHTAGS
   );
 }

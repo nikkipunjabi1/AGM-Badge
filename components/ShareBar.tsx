@@ -10,8 +10,6 @@ const subscribeNever = () => () => {};
 type Props = {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   disabled: boolean;
-  role?: string;
-  company?: string;
   onEvent?: (name: string) => void;
 };
 
@@ -20,12 +18,12 @@ type Props = {
  * themselves (ADR-008). Native share is a mobile convenience and is not rendered at all
  * where the browser cannot share files — an inert button is worse than no button.
  */
-export default function ShareBar({ canvasRef, disabled, role, company, onEvent }: Props) {
+export default function ShareBar({ canvasRef, disabled, onEvent }: Props) {
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<string>();
   const [error, setError] = useState<string>();
 
-  const caption = linkedInCaption(role, company);
+  const caption = linkedInCaption();
   const composers = composerUrls(caption);
 
   // Browser-only capability, read after hydration so the server and client agree.
