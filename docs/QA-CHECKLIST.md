@@ -148,9 +148,14 @@ mush in a feed thumbnail has failed at its only job.
 - [ ] Every string matches docs/CONTENT.md
 - [ ] Marketing sign-off received in writing (AGB-055)
 
-## 8. Privacy
+## 8. Counting and privacy
 
-- [ ] No cookies set beyond what analytics strictly requires
+- [ ] No cookies are set at all
 - [ ] No request anywhere carries a photo
-- [ ] No analytics event carries a name, role or company
+- [ ] **Inspect every `/api/event` request body: it must contain only an event name and a random
+      session id.** No name, role or company, in any field
+- [ ] Counting failing (block `/api/event` in devtools) does not break or slow badge creation
+- [ ] `/?stats=<key>` shows the numbers; a wrong key shows nothing, same as no key
+- [ ] `/api/stats` returns 404 without the key
+- [ ] Attendees see no trace of the counts anywhere in the normal flow
 - [ ] `/privacy` matches docs/PRIVACY.md and is linked from the creator page

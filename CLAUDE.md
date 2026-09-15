@@ -8,10 +8,13 @@ changes. If something here conflicts with a request, say so rather than silently
 A single-purpose web app: an attendee of the PMI UAE Chapter Annual Gathering 2026 enters their
 name (plus optional role, company and photo) and gets a shareable "I'm attending" card.
 
-No database. No login. No backend at all — the app is a static export and everything happens in the
-browser. If a proposed change adds storage, authentication, a server runtime, or a server-side
-record of attendees, stop and raise it: that is an architectural decision, not an implementation
-detail.
+No database of attendees. No login. The app is a static export and everything the attendee does
+happens in their browser. The only server-side code is two Netlify Functions that keep anonymous
+counts (ADR-010); they receive an event name and a random session id, never anything personal.
+
+If a proposed change adds authentication, a record of *who* made a badge, or any identifier
+attached to an event, stop and raise it. Attaching names to the counter is not an extension of
+ADR-010 — it is the thing ADR-010 explicitly rejected, and it would make the privacy notice false.
 
 ## Non-negotiables
 
@@ -29,8 +32,10 @@ These are brand and legal constraints. Do not relax them to make a feature easie
 4. **Logo files in `public/brand/` are authoritative and must not be edited, recoloured, stretched,
    rotated, or reconstructed in code.** Use the supplied SVGs. Respect clear space (see
    docs/DESIGN-SPEC.md).
-5. **No cookies or third-party trackers** beyond privacy-preserving aggregate analytics. No Google
-   Analytics, no Meta pixel, no session recording.
+5. **No cookies and no third-party trackers at all.** No Google Analytics, no Meta pixel, no
+   session recording. Counting is first-party, anonymous and aggregate (ADR-010).
+6. **`track()` takes an event name and nothing else.** Do not widen that signature. It is the
+   guardrail that stops personal data reaching the counter by accident.
 
 ## Commands
 

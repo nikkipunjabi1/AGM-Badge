@@ -1,6 +1,7 @@
 import BadgeCreator from '@/components/BadgeCreator';
 import Countdown from '@/components/Countdown';
 import EventFacts from '@/components/EventFacts';
+import StatsPanel from '@/components/StatsPanel';
 import { COPY } from '@/lib/content';
 
 export default function Home() {
@@ -21,6 +22,8 @@ export default function Home() {
       </header>
 
       <main className="mx-auto max-w-5xl px-5 py-8 sm:py-14">
+        <StatsPanel />
+
         <div className="mb-8 max-w-2xl">
           <p className="font-display text-xs font-semibold tracking-[0.18em] text-primary uppercase">
             {COPY.hero.eyebrow}

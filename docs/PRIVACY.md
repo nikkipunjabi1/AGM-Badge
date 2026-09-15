@@ -30,10 +30,16 @@ and your photo never leaves your device.
 
 ## 4. Analytics
 
-We count how many badges are created and shared, so the Chapter can see whether this was
-worthwhile. Those counts are anonymous totals. They contain no names, no photos, no badge content,
-and nothing that identifies you or your device. We do not use advertising cookies, tracking pixels,
-or session recording.
+We count how many badges are created, downloaded and shared, so the Chapter can see whether this
+was worthwhile. Those counts are plain totals. They contain no names, no photos and no badge
+content: what you type never reaches us.
+
+So that one visit is not counted several times over, a random number is generated for your visit
+and sent with each count. It is not derived from anything about you, it is never linked to your
+name or your badge, and it disappears when you close the tab.
+
+We do not use cookies, advertising trackers, tracking pixels, session recording, or any
+third-party analytics service.
 
 ## 5. Your rights
 
@@ -63,6 +69,11 @@ project has no capacity to meet before 10 October.
 
 ADR-008 strengthened this further: with per-badge URLs removed, the attendee's name no longer
 travels in a shareable link, so the Chapter's processing footprint is now effectively nil.
+
+ADR-010 added anonymous counting and was scoped specifically to preserve that position: the
+endpoints receive an event name and a random per-visit id, never a name, and recording attendees'
+names to a spreadsheet was considered and rejected for exactly this reason. Should that ever be
+revisited, this notice must be rewritten *before* the change ships, not after.
 
 Anything that would change this position — storing badge records, adding accounts, integrating the
 registration list, or uploading photos — requires a new ADR and a review of this notice.

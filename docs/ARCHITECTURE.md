@@ -8,11 +8,13 @@ DECISIONS.md ADR-008 for why that was removed.
 
 ## 1. Shape of the system
 
-There is no backend. The app is a Next.js project exported to static files, where a single client
-page draws the badge on a `<canvas>` and hands the attendee a PNG.
+The app is a Next.js project exported to static files, where a single client page draws the badge
+on a `<canvas>` and hands the attendee an image.
 
-No database. No object storage. No server runtime. No accounts. Nothing is persisted anywhere, by
-anyone, at any point.
+No accounts. No database of attendees. **Nothing an attendee types or attaches is persisted
+anywhere.** The one exception is deliberately narrow: two Netlify Functions keep anonymous counts
+of how many badges are made, so the Chapter can report on the campaign (ADR-010). They receive an
+event name and a random session id, and nothing else.
 
 ```
   confirmation     ┌─────────────────────────────────────┐
@@ -43,9 +45,12 @@ registration even though the badge image itself is not clickable.
 |---|---|---|
 | `/` | Static shell + client island | The creator. Form, live preview, download and share controls |
 | `/privacy` | Static | Privacy notice (see PRIVACY.md) |
+| `/api/event` | Netlify Function | Records an anonymous event. Accepts an event name and a random session id. Never receives anything personal |
+| `/api/stats` | Netlify Function | Private totals for the Chapter, gated on `STATS_KEY`. Returns 404 without it |
 
-That is the entire route table. `next.config.ts` sets `output: 'export'`, so `npm run build`
-produces a folder of static files that any host will serve.
+`next.config.ts` sets `output: 'export'`, so `npm run build` produces a folder of static files.
+The two functions live in `netlify/functions/` and deploy alongside them — which is why the
+counter needed no change to the app's architecture.
 
 ### Open Graph for the app itself
 
@@ -167,13 +172,24 @@ Downscaling before compositing is what keeps the preview responsive: a modern ph
 - Static export means the whole app is CDN-cacheable with no origin to saturate on the day the
   confirmation email goes out.
 
-## 9. Analytics
+## 9. Counting
 
-Aggregate counts only, no identifiers, no cookies (NFR-09, FR-10):
+Aggregate counts only, no cookies, no third-party analytics (NFR-09, FR-10, ADR-010):
 `badge_started`, `badge_completed`, `photo_added`, `download_image`, `share_native`,
-`copy_caption`, `register_clicked`.
+`copy_caption`.
 
-No event may carry the attendee's name, role, company or photo.
+`track()` in `lib/analytics.ts` takes an event name and nothing else — the signature is narrow on
+purpose, so a name or company cannot be attached to one even by accident. Calls are fire and
+forget: badge creation never waits on the counter and never fails because of it.
+
+Each event is stored as an empty blob keyed `<event>/<date>/<session>`, so totals are a count of
+keys. That avoids the read-modify-write race a single shared integer would have when the
+confirmation email goes out and many people arrive at once, dedupes repeat actions within a
+session for free, and yields a per-day breakdown with no extra storage.
+
+**Reading the numbers:** open the live site with `?stats=<key>`, where the key matches the
+`STATS_KEY` environment variable in Netlify. Attendees see nothing; a wrong key is
+indistinguishable from the feature being switched off.
 
 ## 10. Project layout
 

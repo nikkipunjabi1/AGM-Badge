@@ -64,11 +64,15 @@ looks or reads like one of those, it creates brand confusion the Chapter has to 
 | Framework | Next.js (App Router) + TypeScript, static export | Familiar tooling; ships as plain static files |
 | Styling | Tailwind CSS | Fast, and the badge tokens live in one config |
 | Badge rendering | Canvas 2D in the browser | Full control, supports the attendee photo, never uploads it |
-| Storage | **None** | Nothing is persisted anywhere; photos never leave the device |
-| Hosting | Vercel (recommended) or Netlify | See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| Storage | **None for attendee data** | Nothing anyone types or attaches is persisted; photos never leave the device |
+| Counting | Netlify Functions + Blobs | Anonymous totals only, so the Chapter can report on the campaign |
+| Hosting | **Netlify** — live, `main` auto-deploys | See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
 
-There is no database, no login and no server runtime — the whole thing is static files. That is a
-deliberate design decision; see [docs/DECISIONS.md](docs/DECISIONS.md) ADR-002 and ADR-008.
+There is no database of attendees and no login. The only server-side code is two small functions
+that keep anonymous counts, which never receive a name. See [docs/DECISIONS.md](docs/DECISIONS.md)
+ADR-002, ADR-008 and ADR-010.
+
+**Live:** https://pmiuae-agm2026.netlify.app/ · **Campaign numbers:** append `?stats=<key>`
 
 ## Getting started
 

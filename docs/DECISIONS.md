@@ -107,7 +107,9 @@ Revisit only if actual misuse appears.
 
 ### ADR-007 — Next.js on Vercel
 
-**Status:** Accepted · **Date:** 15 Sep 2026
+**Status:** ~~Accepted~~ **Overtaken by events** — the site is deployed on Netlify (see ADR-010
+and DEPLOYMENT.md). The reasoning below still holds; the static export made the host a smaller
+decision than it first appeared. · **Date:** 15 Sep 2026
 
 **Context.** The brief allows Netlify or Vercel. The one genuinely server-side requirement is the
 OG image.
@@ -173,23 +175,66 @@ opaque, so losing PNG's alpha channel costs nothing.
 
 ---
 
+### ADR-010 — Count badges with Netlify Functions and Blobs; never record who
+
+**Status:** Accepted · **Date:** 15 Sep 2026
+
+**Context.** The Chapter needs to report how many badges were created (PRD M1) and had
+nowhere storing that number. A static site cannot keep a shared counter: the code runs in each
+attendee's browser, and `localStorage` only ever knows about one device.
+
+Recording attendees' *names* to a spreadsheet was considered and deliberately rejected. It would
+have made the promise on /privacy false, and would have put the Chapter in scope for the UAE PDPL:
+a lawful basis, a retention period, and handling access and deletion requests, all inside three
+weeks and with no one owning it after the event.
+
+**Decision.** Two Netlify Functions alongside the static export: `/api/event` records that
+something happened, `/api/stats` reports the totals to whoever holds the key. State lives in
+Netlify Blobs. **No name, role, company or photo is ever sent to either endpoint.**
+
+**How counting works.** Each event is an empty blob keyed `<event>/<date>/<session>`, and totals
+are a count of keys. Two properties fall out of that shape:
+
+- *No lost counts.* A single shared integer would need read-modify-write, and simultaneous
+  visitors — exactly what happens when the confirmation email goes out — would overwrite each
+  other. Distinct keys cannot collide.
+- *Free deduplication and a daily trend.* Writing a key is idempotent, so a session that downloads
+  twice counts once, and the date sits in the key, so per-day figures need no extra storage.
+
+The session id is a random value used only for that deduplication. It is not derived from anything
+about the attendee, is never linked to what they typed, and is discarded when the tab closes.
+
+**Consequences.** The app is no longer purely static, which is a real change to ADR-002 and
+ADR-008 — but a narrow one: the endpoints handle counts and nothing else, and badge creation never
+waits on them or fails because of them. Counts are of browser sessions rather than verified people,
+so the number is an estimate and should be reported as one. `/api/stats` is gated on a key in the
+query string, which is obscurity, not authentication; that is proportionate for anonymous totals
+and would not be for anything personal.
+
+**The boundary to hold.** If a future change wants to attach a name, an email, or any identifier to
+an event, that is not an extension of this decision. It is the decision this ADR rejected, and it
+needs the privacy notice rewritten first.
+
+
+---
+
 ## Open questions
 
 Each needs an owner and a date. The first three affect build order.
 
 | ID | Question | Impact | Owner | Needed by |
 |---|---|---|---|---|
-| **OQ-2** | What domain does this live on — a subdomain such as `badge.pmiuae.org`, or a Vercel URL? Who holds DNS? | Blocks AGB-060; affects the email CTA | Chapter / IT | Mon 21 Sep |
 | **OQ-3** | Can the registration confirmation email be edited, and by whom? | Highest-leverage item in the plan (PRD M1) | Registration platform admin | Wed 23 Sep |
 | **OQ-4** | Can we get the Annual Gathering key visual as a layered source file, so the badge uses the real artwork rather than a sampled recreation? | Badge quality | Marketing / designer | Thu 17 Sep |
 | **OQ-5** | What is the Chapter's licensed brand typeface? Current spec uses an open-licence substitute. | Cosmetic, swappable late | Marketing | Fri 25 Sep |
 | **OQ-8** | Who owns the app after the event — is it archived, or generalised for future Chapter events? | Post-launch | Chapter board | Sun 11 Oct |
-| **OQ-9** | Does the Chapter have an existing analytics platform we should use rather than adding one? | AGB-042 | Marketing | Mon 21 Sep |
 
 ### Resolved
 
 | ID | Question | Resolution | Date |
 |---|---|---|---|
+| **OQ-9** | Analytics platform? | Neither. Counts are kept in Netlify Blobs by the Chapter's own endpoints, so no third-party analytics and no cookies (ADR-010) | 15 Sep 2026 |
+| **OQ-2** | Hosting and domain? | Deployed on Netlify at `pmiuae-agm2026.netlify.app`; `main` auto-deploys. A custom domain is still open | 15 Sep 2026 |
 | **OQ-1** | Canonical event page URL for the Register CTA? | `https://pmiuae.org/events/upcoming-events/general-events/pmi-uae-chapter-annual-gathering-meeting-2026` | 15 Sep 2026 |
 | **OQ-6** | Which Chapter logo lockup? | **UAE Chapter** horizontal lockup — matches the naming on the event page and the announcement | 15 Sep 2026 |
 | **OQ-7** | Show the attendee's chosen track on the badge? | **No, not in v1.** The badge already carries name, role, company and photo; the track is self-declared here and could contradict the actual registration. The payload keeps its optional `t` field so it can be enabled later without breaking existing links | 15 Sep 2026 |
@@ -198,7 +243,5 @@ Each needs an owner and a date. The first three affect build order.
 
 So that no question blocks the build:
 
-- **OQ-2:** ship on the Vercel-provided URL; a custom domain can be added after launch without
-  breaking existing badge links.
 - **OQ-4:** rebuild the background from the event artwork at the resolution we have, accepting some
   quality loss on the gradient.

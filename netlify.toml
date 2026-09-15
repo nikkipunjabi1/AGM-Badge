@@ -1,0 +1,12 @@
+# Build command and publish directory are deliberately NOT set here: the site already
+# builds correctly from Netlify's own detected settings, and overriding them from the
+# repo is a good way to break a working deploy. `output: 'export'` in next.config.ts
+# produces `out/`.
+#
+# This file exists to declare the functions directory explicitly. It matches Netlify's
+# default, so the counting endpoints would be picked up either way — but the counter is
+# easy to overlook, and an explicit declaration is a signpost for whoever inherits this.
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

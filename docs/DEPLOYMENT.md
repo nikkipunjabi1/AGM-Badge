@@ -2,9 +2,11 @@
 
 **Version:** 1.0 · **Last updated:** 15 September 2026
 
-Since ADR-008 the app is a **static export** — `npm run build` produces plain files with no server
-runtime. Vercel and Netlify are now equally straightforward, as is any static host. Vercel remains
-the default recommendation only because it needs no configuration at all.
+**The site is live on Netlify at https://pmiuae-agm2026.netlify.app/, and `main` auto-deploys.**
+
+The app is a static export (ADR-008) plus two small Netlify Functions that keep anonymous counts
+(ADR-010). `npm run build` produces `out/`; the functions in `netlify/functions/` deploy alongside
+it automatically.
 
 ---
 
@@ -17,9 +19,9 @@ having no database and no accounts.
 |---|---|---|
 | `NEXT_PUBLIC_APP_URL` | `https://badge.pmiuae.org` | Absolute base for the app's own Open Graph tags |
 | `NEXT_PUBLIC_EVENT_URL` | `https://pmiuae.org/events/…/pmi-uae-chapter-annual-gathering-meeting-2026` | Register CTA destination |
-| `NEXT_PUBLIC_ANALYTICS` | `vercel` \| `plausible` \| `none` | Which analytics to load |
+| `STATS_KEY` | a long random string | **Set this in Netlify** to switch on the private stats view at `/?stats=<key>`. Without it, `/api/stats` returns 404 to everyone |
 
-Set all three in every environment. `NEXT_PUBLIC_EVENT_URL` is the one that matters most: it is the
+Set these in every environment. `NEXT_PUBLIC_EVENT_URL` is the one that matters most: it is the
 only route from a shared badge back to registration.
 
 ## 2. Vercel
@@ -58,19 +60,34 @@ Recommended: `badge.pmiuae.org`.
 Moving domains never breaks an already-downloaded badge, but it does break the CTA in any email or
 post already sent — so settle the domain before launch, not after.
 
-## 4. Netlify alternative
+## 4. Netlify (the live host)
 
-Equally simple now that the build is a static export — no plugin and no edge functions required.
+The site builds from `main` and deploys automatically. Netlify's detected build settings already
+work, which is why `netlify.toml` deliberately does **not** override the build command or publish
+directory — it only declares the functions directory:
 
 ```toml
-# netlify.toml
-[build]
-  command = "npm run build"
-  publish = "out"
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
 ```
 
-Set the same environment variables in Netlify's UI. Drag-and-drop deployment of the `out/` folder
-also works if the Chapter would rather not connect a repository.
+### Switching on the stats view
+
+1. Generate a long random key, for example with `openssl rand -hex 24`.
+2. Netlify → Site configuration → Environment variables → add `STATS_KEY` with that value.
+3. Redeploy (environment variables are read at request time, but a deploy is the simplest way to
+   be sure the functions have picked it up).
+4. Open `https://pmiuae-agm2026.netlify.app/?stats=<key>`.
+
+Keep that URL to yourself. The key sits in the query string, so it will end up in browser history
+and in any screenshot of the address bar. That is proportionate for anonymous totals and would not
+be for anything personal — do not reuse a password for it.
+
+### Vercel
+
+Still viable and needs no changes to the app itself, but the two counting functions would need
+porting to Vercel's function format and a different store. There is no reason to move.
 
 ## 5. Pre-launch checklist
 
@@ -83,7 +100,9 @@ Run in order on the production URL, not a preview.
 - [ ] The Register link reaches the live event page with UTM parameters intact
 - [ ] Lighthouse mobile: performance ≥ 90, accessibility 100
 - [ ] `/privacy` reachable and matches PRIVACY.md
-- [ ] Analytics recording, and carrying no personal data
+- [ ] `STATS_KEY` set in Netlify, and `/?stats=<key>` shows the numbers
+- [ ] `/api/stats` returns 404 without the key
+- [ ] Counting fires on badge creation, and carries no personal data
 - [ ] Brand sign-off received in writing (AGB-055)
 - [ ] The confirmation email CTA points at the production URL with the right UTM (AGB-062)
 

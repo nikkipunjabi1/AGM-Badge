@@ -21,7 +21,7 @@ browser rather than inferred from the code:
   drag-to-reposition with zoom and recentre, HEIC failure path
 - AGB-034 – AGB-037: download (primary), native share on mobile only, copy caption, composer links,
   event facts and Register link
-- AGB-043: privacy page
+- AGB-042 – AGB-043: anonymous counting with a private stats view, privacy page
 
 **Verified in browser:** long names auto-fit to one line; Arabic renders correctly shaped and RTL;
 photos land upright and centre-cropped; export is 1200×1200 JPEG at ~240 KB; mobile layout keeps the
@@ -35,7 +35,6 @@ form reachable; no console errors.
   Caught by a unit test, fixed in the renderer.
 
 **Still open**
-- AGB-042 analytics is a no-op pending OQ-9
 - AGB-056 story format: spec'd in `badge-spec.ts` as `STORY`, not yet wired to the UI
 - The app share card (`public/art/share-card.png`) is blocked on OQ-4
 - All of Sprint 2
@@ -120,7 +119,7 @@ absorbed quietly.
 | ID | Task | Est | Acceptance | Story |
 |---|---|---|---|---|
 | AGB-040 | Countdown to the event on the creator page | 2 | Correct in GST; respects `prefers-reduced-motion` | US-11 |
-| AGB-042 | Analytics events, aggregate only | 2 | All seven events fire; no PII in any event | FR-10 |
+| AGB-042 | Anonymous counting + private stats view | 3 | All six events fire; no PII in any event; `/api/stats` 404s without the key | FR-10 |
 | AGB-043 | Privacy page + footnote disclaimer | 1 | Matches docs/PRIVACY.md verbatim | G5 |
 
 **Total: 48 points.** *(AGB-041 cut by OQ-7; AGB-030–033 cut by ADR-008.)* This is the sprint that decides the launch date.
@@ -147,11 +146,11 @@ absorbed quietly.
 
 | ID | Task | Owner | Acceptance |
 |---|---|---|---|
-| AGB-060 | Production domain + DNS | Chapter / IT | Final URL live over HTTPS |
+| AGB-060 | Custom domain (optional — the Netlify URL works) | Chapter / IT | Final URL live over HTTPS |
 | AGB-061 | Soft launch to board and volunteers | Marketing | ≥ 10 badges created, feedback gathered |
 | AGB-062 | Confirmation email updated with the badge CTA | Registration platform admin | CTA above the fold, UTM tagged |
 | AGB-063 | Chapter LinkedIn announcement | Marketing | Published, using docs/CONTENT.md §5 |
-| AGB-064 | Monitoring on, dashboard shared | Dev | PRD §4 metrics visible to Marketing |
+| AGB-064 | `STATS_KEY` set and the stats URL handed to Marketing | Dev | PRD §4 metrics visible to Marketing |
 
 AGB-062 is the highest-leverage task in the entire project and depends on someone outside the build
 team. Confirm the owner **now**, not on 28 September.
