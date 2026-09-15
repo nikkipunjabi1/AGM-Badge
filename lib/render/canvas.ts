@@ -11,7 +11,7 @@
 import { COLOR, FONT, type BadgeFormat } from '../badge-spec';
 import { BADGE_TEXT } from '../content';
 import { initials } from '../validation';
-import { drawTracked, familyFor, fitText } from './text';
+import { drawTracked, familyFor, fitText, fitWrapped, LINE_HEIGHT } from './text';
 
 export type BadgeData = {
   name: string;
@@ -202,7 +202,11 @@ export function renderBadge(
     ctx.fillText(line, centre, f.name.y + blockShift + i * name.size * 1.15);
   });
 
-  const after = blockShift + name.extraHeight;
+  // A wrapped name pushes role and company down. Clamp so they can never cross the rule
+  // into the event lockup. Names are capped at 40 characters and fit on one line in
+  // practice, so this is insurance rather than a path we expect to take.
+  const headroom = Math.max(0, f.rule.y - 24 - f.company.y);
+  const after = Math.min(blockShift + name.extraHeight, headroom);
 
   if (data.role) {
     const role = fitText(ctx, data.role, f.role, 500, FONT.body);
@@ -230,7 +234,14 @@ export function renderBadge(
   ctx.font = `400 ${f.eventDetail.size}px "${FONT.body}"`;
   ctx.fillText(BADGE_TEXT.eventDetail, centre, f.eventDetail.y);
 
+  // The full theme wraps, so it is anchored from its last baseline upward. That keeps
+  // the bottom safe area intact whether it lands on one line or two.
+  const theme = fitWrapped(ctx, BADGE_TEXT.theme, f.theme, 500, FONT.body);
   ctx.fillStyle = COLOR.mint;
-  ctx.font = `500 ${f.theme.size}px "${FONT.body}"`;
-  ctx.fillText(BADGE_TEXT.theme, centre, f.theme.y);
+  ctx.font = `500 ${theme.size}px "${familyFor(BADGE_TEXT.theme, FONT.body)}"`;
+  const themeLeading = theme.size * LINE_HEIGHT;
+  theme.lines.forEach((line, i) => {
+    const fromBottom = (theme.lines.length - 1 - i) * themeLeading;
+    ctx.fillText(line, centre, f.theme.bottom - fromBottom);
+  });
 }

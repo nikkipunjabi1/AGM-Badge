@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fitText, fontSizeOf, isArabic } from './text';
-import { SQUARE, type TextFit } from '../badge-spec';
+import { fitText, fitWrapped, fontSizeOf, isArabic } from './text';
+import { SQUARE, STORY, type TextFit } from '../badge-spec';
 
 /**
  * Canvas is unavailable in Node, so measurement is modelled as a fixed ratio of font
@@ -83,6 +83,45 @@ describe('fitText — wrap and truncate ladder', () => {
       expect(fitText(measurer(), text, NARROW, 700, 'Poppins').size)
         .toBeGreaterThanOrEqual(NARROW.min);
     }
+  });
+});
+
+const THEME = 'Growing in Unity: Leading AI-Driven and Sustainable Projects for Tomorrow';
+
+describe('fitWrapped', () => {
+  it('wraps the full event theme within its line budget', () => {
+    const result = fitWrapped(measurer(), THEME, SQUARE.theme, 500, 'Inter');
+    expect(result.lines.length).toBeGreaterThan(1);
+    expect(result.lines.length).toBeLessThanOrEqual(SQUARE.theme.maxLines);
+    expect(result.lines.join(' ')).toBe(THEME);
+  });
+
+  it('prefers a larger size over shrinking to one line', () => {
+    // The point of fitWrapped: fitText would drop to the minimum and emit one illegible
+    // line, where this keeps the type large and spends the extra line instead.
+    const wrapped = fitWrapped(measurer(), THEME, SQUARE.theme, 500, 'Inter');
+    const shrunk = fitText(measurer(), THEME, SQUARE.theme, 500, 'Inter');
+    expect(wrapped.size).toBeGreaterThan(shrunk.size);
+  });
+
+  it('keeps every line inside the available width', () => {
+    const ctx = measurer();
+    const result = fitWrapped(ctx, THEME, SQUARE.theme, 500, 'Inter');
+    for (const line of result.lines) {
+      ctx.font = `500 ${result.size}px "Inter"`;
+      expect(ctx.measureText(line).width).toBeLessThanOrEqual(SQUARE.theme.width);
+    }
+  });
+
+  it('reports the extra height the wrap consumes', () => {
+    const result = fitWrapped(measurer(), THEME, SQUARE.theme, 500, 'Inter');
+    expect(result.extraHeight).toBeGreaterThan(0);
+  });
+
+  it('fits the theme in the story format too', () => {
+    const result = fitWrapped(measurer(), THEME, STORY.theme, 500, 'Inter');
+    expect(result.lines.length).toBeLessThanOrEqual(STORY.theme.maxLines);
+    expect(result.size).toBeGreaterThanOrEqual(STORY.theme.min);
   });
 });
 

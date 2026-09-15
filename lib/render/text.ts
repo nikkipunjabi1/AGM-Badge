@@ -98,6 +98,43 @@ export function fitText(
   };
 }
 
+/** Line height multiplier for wrapped text. */
+export const LINE_HEIGHT = 1.22;
+
+/**
+ * Fit text that is *expected* to wrap, at the largest size that stays within maxLines.
+ *
+ * fitText() prefers shrinking to wrapping, which is right for a name. For a long line
+ * like the event theme that is backwards: it would shrink to the minimum and produce one
+ * illegible line rather than two comfortable ones. This finds the biggest size that fits
+ * the line budget instead.
+ */
+export function fitWrapped(
+  ctx: MeasureContext,
+  text: string,
+  fit: TextFit,
+  weight: number,
+  family: string,
+): FittedText {
+  const resolved = familyFor(text, family);
+
+  for (let size = fit.max; size >= fit.min; size -= 1) {
+    const font = `${weight} ${size}px "${resolved}"`;
+    const lines = wrap(ctx, text, font, fit.width);
+    if (lines.length <= fit.maxLines && lines.every((l) => widthOf(ctx, l, font) <= fit.width)) {
+      return { lines, size, extraHeight: (lines.length - 1) * size * LINE_HEIGHT };
+    }
+  }
+
+  // Does not fit even at the minimum: keep the line budget and clip.
+  const font = `${weight} ${fit.min}px "${resolved}"`;
+  const kept = wrap(ctx, text, font, fit.width)
+    .slice(0, fit.maxLines)
+    .map((line) => (widthOf(ctx, line, font) > fit.width ? truncate(ctx, line, font, fit.width) : line));
+
+  return { lines: kept, size: fit.min, extraHeight: (kept.length - 1) * fit.min * LINE_HEIGHT };
+}
+
 /** Pull the pixel size out of a CSS font shorthand — parseFloat would return the weight. */
 export function fontSizeOf(font: string): number {
   return Number(font.match(/(\d+(?:\.\d+)?)px/)?.[1] ?? 16);

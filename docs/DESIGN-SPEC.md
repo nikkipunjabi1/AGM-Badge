@@ -92,10 +92,11 @@ The primary artefact. Used for the LinkedIn feed, the download, and the native s
 │                 PMO Lead                       │  role, 800–850
 │              Emirates Group                    │  company, 850–900
 │                                                │
-│  ────────────────────────────────────────────  │  rule, y=940
-│      PMI UAE Chapter Annual Gathering 2026     │  event, 960–1010
-│   10 October 2026  ·  Le Méridien Dubai        │  detail, 1010–1055
-│        Growing in Unity  ·  [ AI ]             │  theme + track, 1085–1130
+│  ────────────────────────────────────────────  │  rule, y=914
+│      PMI UAE Chapter Annual Gathering 2026     │  event, 940–984
+│   10 October 2026  ·  Le Méridien Dubai        │  detail, 990–1026
+│   Growing in Unity: Leading AI-Driven and      │  theme, wraps,
+│      Sustainable Projects for Tomorrow         │  last baseline 1108
 └────────────────────────────────────────────────┘  1200
 ```
 
@@ -111,10 +112,10 @@ The primary artefact. Used for the LinkedIn feed, the download, and the native s
 | **Name** | centre, baseline y 772 | Poppins 700, **72 px** | Auto-fit: see §6 |
 | Role | centre, baseline y 830 | Inter 500, 34 px, `inkMuted` | Omitted if blank |
 | Company | centre, baseline y 880 | Inter 400, 34 px, `mint` | Omitted if blank |
-| Rule | x 200→1000, y 940, 2 px | `rgba(255,255,255,0.22)` | — |
-| Event name | centre, baseline y 998 | Poppins 600, 40 px, `ink` | — |
-| Event detail | centre, baseline y 1046 | Inter 400, 30 px, `inkMuted` | `10 October 2026 · Le Méridien Dubai` |
-| Theme + track | centre, baseline y 1114 | Inter 500, 26 px, `mint` | Track chip only when set |
+| Rule | x 200→1000, y 914, 2 px | `rgba(255,255,255,0.22)` | — |
+| Event name | centre, baseline y 970 | Poppins 600, 40 px, `ink` | — |
+| Event detail | centre, baseline y 1014 | Inter 400, 30 px, `inkMuted` | `10 October 2026 · Le Méridien Dubai` |
+| **Theme** | centre, **last** baseline y 1108 | Inter 500, 30→21 px, `mint`, max 2 lines, width 720 | The full theme. Wraps, and is anchored from its last baseline upward so the bottom safe area holds at one line or two |
 
 **Vertical rebalancing.** When role *and* company are both blank, shift the name block down by
 40 px and the photo down by 20 px so the composition stays centred (US-02). Do not leave the gap.
@@ -155,11 +156,19 @@ renderers:
 4. If it still does not fit — only possible with a 40-character unbroken string — truncate with an
    ellipsis.
 
-| Field | Max | Min | Available width (square) | Max lines |
-|---|---|---|---|---|
-| Name | 72 px | 40 px | 1000 px | 2 |
-| Role | 34 px | 26 px | 900 px | 1 |
-| Company | 34 px | 26 px | 900 px | 1 |
+| Field | Max | Min | Available width (square) | Max lines | Fitter |
+|---|---|---|---|---|---|
+| Name | 72 px | 40 px | 1000 px | 2 | `fitText` |
+| Role | 34 px | 26 px | 900 px | 1 | `fitText` |
+| Company | 34 px | 26 px | 900 px | 1 | `fitText` |
+| Theme | 30 px | 21 px | 720 px | 2 | `fitWrapped` |
+
+**Two fitters, because the two cases want opposite behaviour.** `fitText` prefers shrinking over
+wrapping, which is right for a name. The event theme is 72 characters, so the same rule would
+shrink it to the minimum and produce one illegible line; `fitWrapped` instead finds the largest
+size that fits the line budget, spending a second line to keep the type readable. The theme's
+width is deliberately narrower than the name's so the break falls in a balanced place rather than
+leaving one orphaned word.
 
 Test fixtures must include `Mohammed Abdul Rahman Al Maktoum` (32 chars), a 40-character single
 word, and `عائشة عبد الرحمن المكتوم`.

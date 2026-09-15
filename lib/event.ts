@@ -33,15 +33,10 @@ export const APP_URL = (
   process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 ).replace(/\/$/, '');
 
-/**
- * Registration page for the Register CTA.
- *
- * TODO(OQ-1): confirm the canonical event page URL with Marketing and set
- * NEXT_PUBLIC_EVENT_URL in every environment. The fallback below is a placeholder
- * and MUST be verified before launch — see the pre-launch checklist in
- * docs/DEPLOYMENT.md §5.
- */
-export const EVENT_URL = process.env.NEXT_PUBLIC_EVENT_URL ?? 'https://www.pmiuae.org/events';
+/** Registration page for the Register CTA. Confirmed by Marketing, 15 Sep 2026 (OQ-1). */
+export const EVENT_URL =
+  process.env.NEXT_PUBLIC_EVENT_URL ??
+  'https://pmiuae.org/events/upcoming-events/general-events/pmi-uae-chapter-annual-gathering-meeting-2026';
 
 type Placement = 'badge_page' | 'creator_footer' | 'confirmation_email';
 

@@ -179,7 +179,6 @@ Each needs an owner and a date. The first three affect build order.
 
 | ID | Question | Impact | Owner | Needed by |
 |---|---|---|---|---|
-| **OQ-1** | What is the canonical event page URL for the Register CTA and UTM links? | Blocks AGB-031 | Marketing | Thu 17 Sep |
 | **OQ-2** | What domain does this live on — a subdomain such as `badge.pmiuae.org`, or a Vercel URL? Who holds DNS? | Blocks AGB-060; affects the email CTA | Chapter / IT | Mon 21 Sep |
 | **OQ-3** | Can the registration confirmation email be edited, and by whom? | Highest-leverage item in the plan (PRD M1) | Registration platform admin | Wed 23 Sep |
 | **OQ-4** | Can we get the Annual Gathering key visual as a layered source file, so the badge uses the real artwork rather than a sampled recreation? | Badge quality | Marketing / designer | Thu 17 Sep |
@@ -191,6 +190,7 @@ Each needs an owner and a date. The first three affect build order.
 
 | ID | Question | Resolution | Date |
 |---|---|---|---|
+| **OQ-1** | Canonical event page URL for the Register CTA? | `https://pmiuae.org/events/upcoming-events/general-events/pmi-uae-chapter-annual-gathering-meeting-2026` | 15 Sep 2026 |
 | **OQ-6** | Which Chapter logo lockup? | **UAE Chapter** horizontal lockup — matches the naming on the event page and the announcement | 15 Sep 2026 |
 | **OQ-7** | Show the attendee's chosen track on the badge? | **No, not in v1.** The badge already carries name, role, company and photo; the track is self-declared here and could contradict the actual registration. The payload keeps its optional `t` field so it can be enabled later without breaking existing links | 15 Sep 2026 |
 
@@ -198,7 +198,6 @@ Each needs an owner and a date. The first three affect build order.
 
 So that no question blocks the build:
 
-- **OQ-1:** link to the Chapter's Upcoming Events listing rather than the specific event page.
 - **OQ-2:** ship on the Vercel-provided URL; a custom domain can be added after launch without
   breaking existing badge links.
 - **OQ-4:** rebuild the background from the event artwork at the resolution we have, accepting some

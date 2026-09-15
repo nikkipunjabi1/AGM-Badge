@@ -59,7 +59,9 @@ export type BadgeFormat = {
   rule: { x1: number; x2: number; y: number; h: number };
   eventName: { y: number; size: number };
   eventDetail: { y: number; size: number };
-  theme: { y: number; size: number };
+  /** The full event theme. Wraps, and is anchored from its LAST baseline so it always
+   *  respects the bottom safe area whether it takes one line or two. */
+  theme: TextFit & { bottom: number };
   /** Applied when role and company are both empty, to keep the composition centred. */
   rebalance: { photo: number; block: number };
 };
@@ -77,10 +79,10 @@ export const SQUARE: BadgeFormat = {
   name: { y: 772, max: 72, min: 40, width: 1000, maxLines: 2 },
   role: { y: 830, max: 34, min: 26, width: 900, maxLines: 1 },
   company: { y: 880, max: 34, min: 26, width: 900, maxLines: 1 },
-  rule: { x1: 200, x2: 1000, y: 940, h: 2 },
-  eventName: { y: 998, size: 40 },
-  eventDetail: { y: 1046, size: 30 },
-  theme: { y: 1114, size: 26 },
+  rule: { x1: 200, x2: 1000, y: 914, h: 2 },
+  eventName: { y: 970, size: 40 },
+  eventDetail: { y: 1014, size: 30 },
+  theme: { bottom: 1108, max: 30, min: 21, width: 720, maxLines: 2 },
   rebalance: { photo: 20, block: 40 },
 };
 
@@ -98,10 +100,10 @@ export const STORY: BadgeFormat = {
   name: { y: 1140, max: 92, min: 50, width: 888, maxLines: 2 },
   role: { y: 1212, max: 42, min: 32, width: 820, maxLines: 1 },
   company: { y: 1274, max: 42, min: 32, width: 820, maxLines: 1 },
-  rule: { x1: 200, x2: 880, y: 1500, h: 2 },
-  eventName: { y: 1572, size: 48 },
-  eventDetail: { y: 1632, size: 36 },
-  theme: { y: 1706, size: 32 },
+  rule: { x1: 200, x2: 880, y: 1490, h: 2 },
+  eventName: { y: 1556, size: 48 },
+  eventDetail: { y: 1612, size: 36 },
+  theme: { bottom: 1740, max: 36, min: 26, width: 800, maxLines: 3 },
   rebalance: { photo: 24, block: 48 },
 };
 

@@ -16,11 +16,11 @@ having no database and no accounts.
 | Variable | Example | Purpose |
 |---|---|---|
 | `NEXT_PUBLIC_APP_URL` | `https://badge.pmiuae.org` | Absolute base for the app's own Open Graph tags |
-| `NEXT_PUBLIC_EVENT_URL` | *TBC (OQ-1)* | Register CTA destination |
+| `NEXT_PUBLIC_EVENT_URL` | `https://pmiuae.org/events/…/pmi-uae-chapter-annual-gathering-meeting-2026` | Register CTA destination |
 | `NEXT_PUBLIC_ANALYTICS` | `vercel` \| `plausible` \| `none` | Which analytics to load |
 
-Set all three in every environment. `NEXT_PUBLIC_EVENT_URL` is the one that matters most — it is the
-only route from a shared badge back to registration (OQ-1).
+Set all three in every environment. `NEXT_PUBLIC_EVENT_URL` is the one that matters most: it is the
+only route from a shared badge back to registration.
 
 ## 2. Vercel
 
@@ -78,7 +78,7 @@ Run in order on the production URL, not a preview.
 
 - [ ] `npm run lint && npm run typecheck && npm run test && npm run build` all pass
 - [ ] `NEXT_PUBLIC_APP_URL` exactly matches the live host, including `https://` and no trailing slash
-- [ ] `NEXT_PUBLIC_EVENT_URL` points at the real event page (OQ-1) — check the link, do not assume
+- [ ] `NEXT_PUBLIC_EVENT_URL` points at the real event page and the link actually resolves
 - [ ] A badge downloaded from production posts cleanly to LinkedIn (QA-CHECKLIST §4)
 - [ ] The Register link reaches the live event page with UTM parameters intact
 - [ ] Lighthouse mobile: performance ≥ 90, accessibility 100

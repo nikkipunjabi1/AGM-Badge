@@ -7,7 +7,9 @@ both together. Event facts live in `lib/event.ts`.
 
 **Copy rules.** Never use *certificate, credential, verified, earned, awarded, official proof* or
 *PDU* in relation to the badge. Write "attendee card", "badge", "I'm attending". British spelling
-throughout. Sentence case for everything except the badge eyebrow.
+throughout. Sentence case for everything except the badge eyebrow. **No em dashes anywhere in
+attendee-facing copy** — use a full stop or a comma instead. This is a house style rule for the
+campaign; check it before shipping any new string.
 
 ---
 
@@ -29,7 +31,7 @@ throughout. Sentence case for everything except the badge eyebrow.
 | `city` | Dubai, UAE |
 | `pdus` | 6 |
 | `audience` | PMI UAE Chapter members only |
-| `eventUrl` | *TBC — the Upcoming Events page for this event (DECISIONS.md OQ-1)* |
+| `eventUrl` | `https://pmiuae.org/events/upcoming-events/general-events/pmi-uae-chapter-annual-gathering-meeting-2026` |
 | `chapterUrl` | *TBC — Chapter homepage* |
 
 ## 2. Creator page — `/`
@@ -80,7 +82,7 @@ throughout. Sentence case for everything except the badge eyebrow.
 | Date pill | `10 OCT 2026` |
 | Event line | `PMI UAE Chapter Annual Gathering 2026` |
 | Detail line | `10 October 2026 · Le Méridien Dubai` |
-| Theme line | `Growing in Unity` |
+| Theme line | `Growing in Unity: Leading AI-Driven and Sustainable Projects for Tomorrow` (wraps to two lines) |
 | Track chip | `AI` or `SUSTAINABILITY` |
 
 Nothing else appears on the badge. In particular: no PDU count, no "verified", no QR code.
@@ -94,7 +96,7 @@ The caption is pre-filled but fully editable — people post better copy when it
 ```
 I'll be at the PMI UAE Chapter Annual Gathering 2026 on Saturday 10 October at Le Méridien Dubai.
 
-This year's theme is Growing in Unity: Leading AI-Driven and Sustainable Projects for Tomorrow — a full day of keynotes, a panel on where AI and sustainability actually meet in delivery, and specialist tracks in the afternoon.
+This year's theme is Growing in Unity: Leading AI-Driven and Sustainable Projects for Tomorrow. It is a full day of keynotes, a panel on where AI and sustainability actually meet in delivery, and specialist tracks in the afternoon.
 
 If you're going too, let's connect on the day. Registration is open to Chapter members here: {EVENT_URL}
 
@@ -109,7 +111,7 @@ sustainability are reshaping how we deliver projects.`
 ### 5.3 WhatsApp / short
 
 ```
-I'll be at the PMI UAE Chapter Annual Gathering on 10 October at Le Méridien Dubai — AI, sustainability, and a room full of project people. Come along: {EVENT_URL}
+I'll be at the PMI UAE Chapter Annual Gathering on 10 October at Le Méridien Dubai. AI, sustainability, and a room full of project people. Come along: {EVENT_URL}
 ```
 
 ### 5.4 X
@@ -165,7 +167,7 @@ Not registered yet? Seats are limited: {EVENT_URL}
 | Key | Copy |
 |---|---|
 | `errors.nameRequired` | Please enter your name so we can put it on the badge |
-| `errors.nameShort` | That looks a little short — please enter at least two characters |
+| `errors.nameShort` | That looks a little short. Please enter at least two characters |
 | `errors.nameLong` | Please keep this to 40 characters so it fits on the badge |
 | `errors.charset` | Please use letters, numbers and basic punctuation only |
 | `errors.blocked` | Please choose different wording for your badge |

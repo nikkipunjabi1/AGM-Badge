@@ -73,7 +73,7 @@ export const COPY = {
 
   errors: {
     nameRequired: 'Please enter your name so we can put it on the badge',
-    nameShort: 'That looks a little short — please enter at least two characters',
+    nameShort: 'That looks a little short. Please enter at least two characters',
     nameLong: 'Please keep this to 40 characters so it fits on the badge',
     charset: 'Please use letters, numbers and basic punctuation only',
     blocked: 'Please choose different wording for your badge',
@@ -98,15 +98,17 @@ export const BADGE_TEXT = {
   datePill: EVENT.dateBadge,
   eventName: EVENT.name,
   eventDetail: `${EVENT.dateShort} · ${EVENT.venue}`,
-  theme: EVENT.themeShort,
+  theme: EVENT.theme,
 } as const;
 
 const HASHTAGS = '#PMIUAE #PMIUAEChapter #AnnualGathering2026 #GrowingInUnity #ProjectManagement';
 
 /**
- * The suggested LinkedIn caption. Pre-filled but fully editable — people post better
- * copy when it sounds like them. Carries the event link, which since ADR-008 is the
- * only route from a shared badge back to registration.
+ * The suggested LinkedIn caption. Pre-filled but fully editable, because people post
+ * better copy when it sounds like them. Carries the event link, which since ADR-008 is
+ * the only route from a shared badge back to registration.
+ *
+ * No em dashes anywhere in share copy: it is a house style rule for this campaign.
  */
 export function linkedInCaption(role?: string, company?: string): string {
   const opener =
@@ -117,14 +119,14 @@ export function linkedInCaption(role?: string, company?: string): string {
   return (
     `I'll be at the ${EVENT.name} on ${EVENT.dateLong.replace('Saturday, ', 'Saturday ')} at ${EVENT.venue}.\n\n` +
     opener +
-    `This year's theme is ${EVENT.theme} — a full day of keynotes, a panel on where AI and sustainability actually meet in delivery, and specialist tracks in the afternoon.\n\n` +
+    `This year's theme is ${EVENT.theme}. It is a full day of keynotes, a panel on where AI and sustainability actually meet in delivery, and specialist tracks in the afternoon.\n\n` +
     `If you're going too, let's connect on the day. Registration is open to Chapter members here: ${EVENT_URL}\n\n` +
     HASHTAGS
   );
 }
 
 export function shortCaption(): string {
-  return `I'll be at the ${EVENT.name} on ${EVENT.dateShort} at ${EVENT.venue} — AI, sustainability, and a room full of project people. Come along: ${EVENT_URL}`;
+  return `I'll be at the ${EVENT.name} on ${EVENT.dateShort} at ${EVENT.venue}. AI, sustainability, and a room full of project people. Come along: ${EVENT_URL}`;
 }
 
 /** Composer links. The attendee still attaches the downloaded image themselves (ADR-008). */
